@@ -1,0 +1,7 @@
+/target
+/Cargo.lock
+*.o
+*.c
+.clang_format
+*.rs
+!main.rs
