@@ -17,10 +17,24 @@ fn get_digit(l: &str) -> u32 {
 
 fn main() -> Result<(), std::io::Error> {
     let content = fs::read_to_string("./day_01/input.txt")?;
-    let mut sum = 0;
+    let mut part1 = 0;
+    let mut part2 = 0;
     for mut l in content.lines() {
         let mut first = 0;
         let mut end = 0;
+        for c in l.chars() {
+            if !c.is_digit(10) {
+                continue;
+            }
+            let digit = c.to_digit(10).expect("");
+            if first == 0 {
+                first = digit;
+            }
+            end = digit;
+        }
+        part1 += first * 10 + end;
+        first = 0;
+        end = 0;
         while l.len() > 0 {
             let r = get_digit(l);
             l = &l[1..l.len()];
@@ -32,8 +46,9 @@ fn main() -> Result<(), std::io::Error> {
             }
             end = r;
         }
-        sum += first * 10 + end;
+        part2 += first * 10 + end;
     }
-    println!("{}", sum);
+    println!("part1: {}", part1);
+    println!("part2: {}", part2);
     Ok(())
 }
