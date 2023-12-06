@@ -1,18 +1,14 @@
 use std::fs;
 
 fn get_result(time: i64, distance_to_beat: i64) -> u64 {
-    // Yes I could use the quadratic formula for this. But I am too lazy to do that.
-    let mut ways_to_win = 0;
-    for i in 0..=time {
-        let t = time;
-        let speed = i;
-        let time_left = t - speed;
-        let distance = i * time_left;
-        if distance > distance_to_beat {
-            ways_to_win += 1;
-        }
-    }
-    ways_to_win
+    let b = time;
+    let c = distance_to_beat;
+    // Using quadratic formula(that is taught in Swedish schools).
+    // The rounding works for my input but I am unsure if it would work for all inputs.
+    let calc = (((b*b/4) - c) as f64).sqrt();
+    let lo = b/2 - calc.floor() as i64;
+    let hi = (b+1)/2 + calc.ceil() as i64;
+    (hi - lo) as u64
 }
 
 fn main() -> Result<(), std::io::Error> {
