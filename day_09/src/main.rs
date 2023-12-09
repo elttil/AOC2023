@@ -6,18 +6,18 @@ fn main() -> Result<(), std::io::Error> {
     let mut part2 = 0;
 
     for l in content.lines() {
-        let mut tree: Vec<Vec<i32>> = vec![];
+        let mut tree: Vec<Vec<i64>> = vec![];
 
-        let nums: Vec<i32> = l
+        let nums: Vec<i64> = l
             .split(" ")
             .filter(|x| !x.is_empty())
-            .map(|x| x.parse::<i32>().expect(""))
+            .map(|x| x.parse::<i64>().expect(""))
             .collect::<Vec<_>>();
         tree.push(nums.clone());
 
         let mut previous_vector = nums;
         loop {
-            let mut v: Vec<i32> = vec![];
+            let mut v: Vec<i64> = vec![];
             for i in previous_vector.windows(2) {
                 v.push(i[1] - i[0]);
             }
@@ -28,11 +28,11 @@ fn main() -> Result<(), std::io::Error> {
             }
         }
 
-        part1 += tree.iter().fold(0i32, |mut delta, x| {
+        part1 += tree.iter().fold(0i64, |mut delta, x| {
             delta = x.last().unwrap() + delta;
             delta
         });
-        part2 += tree.iter().rev().fold(0i32, |mut delta, x| {
+        part2 += tree.iter().rev().fold(0i64, |mut delta, x| {
             delta = x.first().unwrap() - delta;
             delta
         });
