@@ -1,21 +1,5 @@
 use std::fs;
 
-fn get_next_line(nums: &Vec<i32>) -> Vec<i32> {
-    let mut v: Vec<i32> = vec![];
-    let mut prev: i32 = nums[0];
-    for (index, i) in nums.iter().enumerate() {
-        if 0 == index {
-            continue;
-        }
-        if nums.len() == index {
-            break;
-        }
-        v.push(*i - prev);
-        prev = *i;
-    }
-    return v;
-}
-
 fn main() -> Result<(), std::io::Error> {
     let content = fs::read_to_string("./day_09/input.txt")?;
     let mut part1 = 0;
@@ -32,41 +16,26 @@ fn main() -> Result<(), std::io::Error> {
         tree.push(nums.clone());
 
         let mut previous_vector = nums;
-
         loop {
-            let next = get_next_line(&previous_vector);
-            let mut done = true;
-            for i in &next {
-                if *i != 0 {
-                    done = false;
-                }
+            let mut v: Vec<i32> = vec![];
+            for i in previous_vector.windows(2) {
+                v.push(i[1] - i[0]);
             }
-            tree.push(next.clone());
-            previous_vector = next.clone();
-            if done {
+            tree.push(v.clone());
+            previous_vector = v;
+            if previous_vector.iter().all(|&x| x == 0) {
                 break;
             }
         }
 
-        let mut to_sum = 0;
-        let mut delta = 0;
-        for ti in 1..tree.len() {
-            let index = tree.len() - 1 - ti;
-            let last_value = tree[index].last().unwrap();
-            to_sum = last_value + delta;
-            delta = last_value + delta;
-        }
-        part1 += to_sum;
-
-        delta = 0;
-        // Backwards extrapolation
-        for ti in 1..tree.len() {
-            let index = tree.len() - 1 - ti;
-            let last_value = tree[index].first().unwrap();
-            to_sum = last_value - delta;
-            delta = last_value - delta;
-        }
-        part2 += to_sum;
+        part1 += tree.iter().fold(0i32, |mut delta, x| {
+            delta = x.last().unwrap() + delta;
+            delta
+        });
+        part2 += tree.iter().rev().fold(0i32, |mut delta, x| {
+            delta = x.first().unwrap() - delta;
+            delta
+        });
     }
 
     println!("part1: {}", part1);
